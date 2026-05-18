@@ -22,7 +22,7 @@ int main() {
         for(int i=0;i<n;i++) {
         if(temps.back() == max) {
             temps.pop_back();}
-        }
+        
         
         for(int i=0;i<n;i++) {
         if(temps.front() == min) {
