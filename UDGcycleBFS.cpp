@@ -4,7 +4,7 @@ class Solution {
     bool isCycleBFS(unordered_map<int,vector<int>> &adj,vector<bool> &visited, int i) {
         
         queue<pair<int,int>> q;
-        ok
+        
         
         q.push({i,-1});
         visited[i] = true;
