@@ -8,7 +8,7 @@ public:
         while(i != j) {
             int sum = numbers[i] + numbers[j];
             if(sum > target) {
-                j--;
+                j--;wasd
             }
 
             else if (sum < target) {
