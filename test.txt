@@ -1,0 +1,58 @@
+// q1
+read -p "Enter your admission no : " adm
+echo "The admission number is : $adm"
+
+// q3
+read -p "Enter number : " n
+fac=1
+for((i=1;i<=n;i++))
+do
+((fac *= i))
+done
+
+echo "The factorial of $n is $fac"
+
+// q5
+notprime=1
+read -p "Enter number: " n
+for((i=2;i<=n/2;i++))
+do
+if((n % i == 0));
+then
+    notprime=0
+    break
+fi
+done
+
+if((notprime==1)); then
+    echo "Prime"
+else
+    echo "NOT Prime"
+fi
+
+
+// q2
+read -p "Enter year : " year
+if(((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))); then
+    echo "Leap year"
+else
+    echo "Not leap year"
+fi
+
+// q6
+read -p "Num1 : " a
+read -p "Num2 : " b
+read -p "Num3 : " c
+if((a > b && a > c)); then
+echo "$a is the greatest"
+elif((b > c)); then
+echo "$b is the greatest"
+else
+echo "$c is the greatest"
+fi
+
+
+//q4
+read -p "Enter a string: " input_string
+vowel_count=$(echo "$input_string" | grep -oi '[aeiou]' | wc -l)
+echo "Number of vowels: $vowel_count"

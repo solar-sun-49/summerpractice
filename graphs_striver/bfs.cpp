@@ -1,28 +1,25 @@
 #include <iostream>
 using namespace std;
 
-vector<int> bfs(int n,int starting, vector<int> adj[]) {
-    vector<int> traversal;
-    vector<bool> visited(n,false);
-    visited[starting] = true;
-
+void bfs(int n,int start,vector<int> adj[]) {
+    vector<bool> visisted(n,false);
     queue<int> q;
-    q.push(starting);
+    visisted[start] = true;
+    q.push(start);
+    vector<int> traversal;
 
     while(!q.empty()) {
-        int curr = q.front();
+        int u = q.front();
         q.pop();
-        traversal.push_back(curr);
+        traversal.push_back(u);
 
-        for(auto neighbour : adj[curr]) {
-            if(!visited[neighbour]) {
-                q.push(neighbour);
-                visited[neighbour] = true;
+        for(auto v : adj[u]) {
+            if(!visisted[v]) {
+                visisted[v] = true;
+                q.push(v);
             }
         }
     }
-
-    return traversal;
 }
 
 int main() {
