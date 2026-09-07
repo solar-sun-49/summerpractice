@@ -1,72 +1,37 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <string>
+
 using namespace std;
-void fifo(string reference,int frames) {
+
+void fifo(string reference, int frames) {
     int pagefault = 0;
 
     vector<int> frame(frames);
     int curr = 0;
+
     for(auto s : reference) {
-        if(curr >= frames) curr = 0;
-        if(find(frame.begin(),frame.end(),s) == frame.end()) {
+        if(curr >= frames)
+            curr = 0;
+
+        if(find(frame.begin(), frame.end(), s) == frame.end()) {
             pagefault++;
             frame[curr] = s;
             curr++;
 
             for(auto v : frame) {
-                cout<<v<<" ";
+                cout << v << " ";
             }
 
-            cout<<endl;
+            cout << endl;
         }
-
-        //make queue of size "frames", if miss then pop and push the new element, else keep it as it is
     }
 
-    cout<<"Number of page faults : "<<pagefault<<endl;
+    cout << "Number of page faults : " << pagefault << endl;
 }
 
-
-void optimal(string reference, int frames) {
-
-    vector<int> frame(frames);
-
-    queue<int> used;
-
-    for(int i=0;i<reference.size();i++) {
-
-    }
-}
-
-void lru(string reference, int frames) {
-
-    vector<int> frame(frames);
-    int pagefault = 0;
-    
-    for(auto s : reference) {
-        auto it = find(frame.begin(),frame.end(),s);
-        if(it != frame.end()) {
-            int page = *it;
-            frame.erase(it);
-            frame.push_back(page);
-        }
-
-        else{
-            
-            pagefault++;
-            frame.erase(frame.begin());
-            frame.push_back(s);
-
-            for(auto i : frame) {
-                cout<<i<<" ";
-            }
-
-            cout<<endl;
-        }
-
-        cout<<"Page faults : "<<pagefault<<endl;
-    }
-
-}
 
 void optimal(string reference, int frames) {
 
@@ -139,19 +104,60 @@ void optimal(string reference, int frames) {
     cout << "Number of page faults : " << pagefault << endl;
 }
 
+
+void lru(string reference, int frames) {
+
+    vector<int> frame(frames);
+    int pagefault = 0;
+
+    for(auto s : reference) {
+
+        auto it = find(frame.begin(), frame.end(), s);
+
+        if(it != frame.end()) {
+            int page = *it;
+            frame.erase(it);
+            frame.push_back(page);
+        }
+
+        else {
+
+            pagefault++;
+            frame.erase(frame.begin());
+            frame.push_back(s);
+
+            for(auto i : frame) {
+                cout << i << " ";
+            }
+
+            cout << endl;
+        }
+    }
+
+    cout << "Page faults : " << pagefault << endl;
+}
+
+
 int main() {
 
     string reference;
-    cout<<"Enter the strig input"<<endl;
-    cin>>reference;
+
+    cout << "Enter the string input" << endl;
+    cin >> reference;
 
     int frames;
-    cout<<"Enter number of frames"<<endl;
-    cin>>frames;
 
-    // fifo(reference,frames);
-    // cout<<endl<<endl;
-    lru(reference,frames);
+    cout << "Enter number of frames" << endl;
+    cin >> frames;
+
+    // fifo(reference, frames);
+
+    // cout << endl << endl;
+
+    // lru(reference, frames);
+
+    cout << endl;
+    optimal(reference, frames);
 
     return 0;
 }
