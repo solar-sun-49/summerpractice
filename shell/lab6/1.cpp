@@ -1,5 +1,6 @@
 //reference -> the given string
 //frames -> number of frames
+//frame -> the frames
 //pagefault -> number of page misses
 
 
