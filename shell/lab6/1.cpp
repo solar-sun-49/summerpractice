@@ -21,11 +21,122 @@ void fifo(string reference,int frames) {
 
         //make queue of size "frames", if miss then pop and push the new element, else keep it as it is
     }
+
+    cout<<"Number of page faults : "<<pagefault<<endl;
 }
 
 
+void optimal(string reference, int frames) {
+
+    vector<int> frame(frames);
+
+    queue<int> used;
+
+    for(int i=0;i<reference.size();i++) {
+
+    }
+}
+
 void lru(string reference, int frames) {
+
+    vector<int> frame(frames);
+    int pagefault = 0;
     
+    for(auto s : reference) {
+        auto it = find(frame.begin(),frame.end(),s);
+        if(it != frame.end()) {
+            int page = *it;
+            frame.erase(it);
+            frame.push_back(page);
+        }
+
+        else{
+            
+            pagefault++;
+            frame.erase(frame.begin());
+            frame.push_back(s);
+
+            for(auto i : frame) {
+                cout<<i<<" ";
+            }
+
+            cout<<endl;
+        }
+
+        cout<<"Page faults : "<<pagefault<<endl;
+    }
+
+}
+
+void optimal(string reference, int frames) {
+
+    vector<int> frame(frames);
+    int pagefault = 0;
+    int filled = 0;
+
+    for(int i = 0; i < reference.size(); i++) {
+
+        int page = reference[i];
+
+        // Check if page is already present
+        if(find(frame.begin(), frame.end(), page) != frame.end()) {
+            continue;
+        }
+
+        pagefault++;
+
+        // If there is an empty frame, put the page there
+        if(filled < frames) {
+            frame[filled] = page;
+            filled++;
+
+            for(auto v : frame) {
+                cout << v << " ";
+            }
+
+            cout << endl;
+            continue;
+        }
+
+        // Find the page which will be used farthest in the future
+        int replaceIndex = -1;
+        int farthest = -1;
+
+        for(int j = 0; j < frames; j++) {
+
+            int k;
+
+            // Search for next use of frame[j]
+            for(k = i + 1; k < reference.size(); k++) {
+                if(reference[k] == frame[j]) {
+                    break;
+                }
+            }
+
+            // Page is never used again
+            if(k == reference.size()) {
+                replaceIndex = j;
+                break;
+            }
+
+            // Page used farthest in future
+            if(k > farthest) {
+                farthest = k;
+                replaceIndex = j;
+            }
+        }
+
+        frame[replaceIndex] = page;
+
+        // Display current frames
+        for(auto v : frame) {
+            cout << v << " ";
+        }
+
+        cout << endl;
+    }
+
+    cout << "Number of page faults : " << pagefault << endl;
 }
 
 int main() {
@@ -38,7 +149,9 @@ int main() {
     cout<<"Enter number of frames"<<endl;
     cin>>frames;
 
-    fifo(reference,frames);
+    // fifo(reference,frames);
+    // cout<<endl<<endl;
+    lru(reference,frames);
 
     return 0;
 }
