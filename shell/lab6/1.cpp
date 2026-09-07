@@ -1,3 +1,8 @@
+//reference -> the given string
+//frames -> number of frames
+//pagefault -> number of page misses
+
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -34,13 +39,11 @@ void fifo(string reference, int frames) {
 
 
 void optimal(string reference, int frames) {
-
     vector<int> frame(frames);
     int pagefault = 0;
     int filled = 0;
 
     for(int i = 0; i < reference.size(); i++) {
-
         int page = reference[i];
 
         // Check if page is already present
@@ -58,7 +61,6 @@ void optimal(string reference, int frames) {
             for(auto v : frame) {
                 cout << v << " ";
             }
-
             cout << endl;
             continue;
         }
@@ -68,39 +70,32 @@ void optimal(string reference, int frames) {
         int farthest = -1;
 
         for(int j = 0; j < frames; j++) {
-
             int k;
-
             // Search for next use of frame[j]
             for(k = i + 1; k < reference.size(); k++) {
                 if(reference[k] == frame[j]) {
                     break;
                 }
             }
-
             // Page is never used again
             if(k == reference.size()) {
                 replaceIndex = j;
                 break;
             }
-
             // Page used farthest in future
             if(k > farthest) {
                 farthest = k;
                 replaceIndex = j;
             }
         }
-
         frame[replaceIndex] = page;
 
         // Display current frames
         for(auto v : frame) {
             cout << v << " ";
         }
-
         cout << endl;
     }
-
     cout << "Number of page faults : " << pagefault << endl;
 }
 
