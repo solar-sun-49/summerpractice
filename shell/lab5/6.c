@@ -12,7 +12,7 @@ int main() {
     else if (pid == 0) {
         /* Child: simulate some work */
         printf("Child (PID %d, Parent PID %d): working...\n", getpid(), getppid());
-        sleep(3);
+        sleep(30);
         printf("Child (PID %d): work done, exiting.\n", getpid());
     }
     else {

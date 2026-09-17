@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int main(int argc, char *argv[]) {
+int main() {
     for (int i = 0; i < 4; i++) {
         int ret = fork();
         if (ret == 0)

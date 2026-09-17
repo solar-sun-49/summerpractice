@@ -1,31 +1,74 @@
-//reference -> the given string
-//frames -> number of frames
-//frame -> the frames
-//pagefault -> number of page misses
-
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <queue>
 #include <string>
 
 using namespace std;
 
-void fifo(string reference, int frames) {
-    int pagefault = 0;
 
-    vector<int> frame(frames);
+void fifo(string reference, int frames) {
+
+    vector<int> frame(frames, -1);
+    int pagefault = 0;
     int curr = 0;
 
-    for(auto s : reference) {
-        if(curr >= frames)
-            curr = 0;
+    for(int i = 0; i < reference.size(); i++) {
 
-        if(find(frame.begin(), frame.end(), s) == frame.end()) {
+        int page = reference[i] - '0';
+
+        if(find(frame.begin(), frame.end(), page) == frame.end()) {
+
             pagefault++;
-            frame[curr] = s;
+
+            frame[curr] = page;
             curr++;
+
+            if(curr >= frames)
+                curr = 0;
+
+            for(auto v : frame) {
+                if(v != -1)
+                    cout << v << " ";
+            }
+
+            cout << endl;
+        }
+    }
+
+    cout << "Number of page faults : " << pagefault << endl;
+}
+
+
+void lru(string reference, int frames) {
+
+    vector<int> frame;
+    int pagefault = 0;
+
+    for(int i = 0; i < reference.size(); i++) {
+
+        int page = reference[i] - '0';
+
+        auto it = find(frame.begin(), frame.end(), page);
+
+        // Page is already present
+        if(it != frame.end()) {
+
+            // Move the recently used page to the back
+            frame.erase(it);
+            frame.push_back(page);
+        }
+
+        // Page is not present
+        else {
+
+            pagefault++;
+
+            // If frames are full, remove least recently used page
+            if(frame.size() == frames) {
+                frame.erase(frame.begin());
+            }
+
+            frame.push_back(page);
 
             for(auto v : frame) {
                 cout << v << " ";
@@ -40,97 +83,84 @@ void fifo(string reference, int frames) {
 
 
 void optimal(string reference, int frames) {
-    vector<int> frame(frames);
+
+    vector<int> frame(frames, -1);
     int pagefault = 0;
     int filled = 0;
 
     for(int i = 0; i < reference.size(); i++) {
-        int page = reference[i];
+
+        int page = reference[i] - '0';
 
         // Check if page is already present
         if(find(frame.begin(), frame.end(), page) != frame.end()) {
             continue;
         }
 
+        // Page fault
         pagefault++;
 
-        // If there is an empty frame, put the page there
+        // If there is an empty frame
         if(filled < frames) {
+
             frame[filled] = page;
             filled++;
 
             for(auto v : frame) {
-                cout << v << " ";
+                if(v != -1)
+                    cout << v << " ";
             }
+
             cout << endl;
+
             continue;
         }
 
-        // Find the page which will be used farthest in the future
+        // Find page used farthest in the future
         int replaceIndex = -1;
         int farthest = -1;
 
         for(int j = 0; j < frames; j++) {
+
             int k;
-            // Search for next use of frame[j]
+
+            // Search for next occurrence of frame[j]
             for(k = i + 1; k < reference.size(); k++) {
-                if(reference[k] == frame[j]) {
+
+                int futurePage = reference[k] - '0';
+
+                if(futurePage == frame[j]) {
                     break;
                 }
             }
-            // Page is never used again
+
+            // Page will never be used again
             if(k == reference.size()) {
+
                 replaceIndex = j;
                 break;
             }
+
             // Page used farthest in future
             if(k > farthest) {
+
                 farthest = k;
                 replaceIndex = j;
             }
         }
+
+        // Replace page
         frame[replaceIndex] = page;
 
-        // Display current frames
+        // Display frames
         for(auto v : frame) {
             cout << v << " ";
         }
+
         cout << endl;
     }
+
     cout << "Number of page faults : " << pagefault << endl;
-}
-
-
-void lru(string reference, int frames) {
-
-    vector<int> frame(frames);
-    int pagefault = 0;
-
-    for(auto s : reference) {
-
-        auto it = find(frame.begin(), frame.end(), s);
-
-        if(it != frame.end()) {
-            int page = *it;
-            frame.erase(it);
-            frame.push_back(page);
-        }
-
-        else {
-
-            pagefault++;
-            frame.erase(frame.begin());
-            frame.push_back(s);
-
-            for(auto i : frame) {
-                cout << i << " ";
-            }
-
-            cout << endl;
-        }
-    }
-
-    cout << "Page faults : " << pagefault << endl;
 }
 
 
@@ -138,21 +168,22 @@ int main() {
 
     string reference;
 
-    cout << "Enter the string input" << endl;
+    cout << "Enter the string input: ";
     cin >> reference;
 
     int frames;
 
-    cout << "Enter number of frames" << endl;
+    cout << "Enter number of frames: ";
     cin >> frames;
 
-    // fifo(reference, frames);
 
-    // cout << endl << endl;
+    cout << "\nFIFO\n";
+    fifo(reference, frames);
 
-    // lru(reference, frames);
+    cout << "\nLRU\n";
+    lru(reference, frames);
 
-    cout << endl;
+    cout << "\nOPTIMAL\n";
     optimal(reference, frames);
 
     return 0;
